@@ -49,7 +49,7 @@ if (localStorage.getItem("monstersCaught")){
 
 //-------------------------------- Background Audio Initialization --------------------------------
 var backgroundAudio = new Audio('audio/fm6 .mp3'); //play from this audio file, copyright stuff
-backgroundAudio.volume = 0.5 //set the volume so it doesn't kill people's ears
+backgroundAudio.volume = 0.2 //set the volume so it doesn't kill people's ears
 backgroundAudio.addEventListener('ended', function() { //set an event listener so that when the music ends it restarts
     this.currentTime = 0; //the variable this refers to backgroundAudio and restarts at the 0 second mark
     this.play();
@@ -100,6 +100,9 @@ var update = function (modifier) {
 		++monstersCaught;
 		storeData(monstersCaught);
 		reset();
+		var collisionAudio = new Audio('audio/normal-hitclap.wav');
+		collisionAudio.volume= 0.2
+		collisionAudio.play();
 	}
 	
 	heroWallCollision();
