@@ -1,8 +1,8 @@
 // Create the canvas
 var canvas = document.createElement("canvas");
 var ctx = canvas.getContext("2d");
-canvas.width = 512;
-canvas.height = 480;
+canvas.width = window.innerWidth/2;
+canvas.height = window.innerHeight/2;
 document.body.appendChild(canvas);
 
 // Background image
@@ -87,7 +87,7 @@ var update = function (modifier) {
 // Draw everything
 var render = function () {
 	if (bgReady) {
-		ctx.drawImage(bgImage, 0, 0);
+		ctx.drawImage(bgImage, 0, 0, bgImage.width, bgImage.height, 0, 0, canvas.width, canvas.height);
 	}
 
 	if (heroReady) {
