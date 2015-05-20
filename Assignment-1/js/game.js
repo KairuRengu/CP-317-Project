@@ -43,9 +43,9 @@ if (localStorage.getItem("monstersCaught")){ //if they have played the game befo
 	var monstersCaught = 0;
 	
 }
-var audio = new Audio('audio/fm6 .mp3');
-audio.volume = 0.5
-audio.play();
+var backgroundAudio = new Audio('audio/fm6 .mp3');
+backgroundAudio.volume = 0.5
+backgroundAudio.play();
 
 // Handle keyboard controls
 var keysDown = {};
