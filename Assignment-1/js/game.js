@@ -36,7 +36,14 @@ var hero = {
 	speed: 256 // movement in pixels per second
 };
 var monster = {};
-var monstersCaught = 0;
+
+if (localStorage.getItem("monstersKilled")){ //if they have played the game before continue from where they last left off
+	var monstersCaught = Number(localStorage.getItem("monstersKilled"));
+}else{ //if they haven't played the game before start the monster count at 0
+	var monstersCaught = 0;
+	
+}
+
 
 // Handle keyboard controls
 var keysDown = {};
@@ -64,7 +71,6 @@ var update = function (modifier) {
 	}
 	if (40 in keysDown) { // Player holding down
 		hero.y += hero.speed * modifier;
-		console.log(hero.y);
 	}
 	if (37 in keysDown) { // Player holding left
 		hero.x -= hero.speed * modifier;
@@ -72,7 +78,7 @@ var update = function (modifier) {
 	if (39 in keysDown) { // Player holding right
 		hero.x += hero.speed * modifier;
 	}
-	heroWallCollision();
+	
 	// Are they touching?
 	if (
 		hero.x <= (monster.x + 32)
@@ -81,21 +87,30 @@ var update = function (modifier) {
 		&& monster.y <= (hero.y + 32)
 	) {
 		++monstersCaught;
+		storeData(monstersCaught);
 		reset();
 	}
+	
+	heroWallCollision();
+	
 };
+var storeData = function(monstersCaught){
+/*--------------------------------------
+Problem with function:
+It stores the oldest version from refresh and not the newest updated one
+----------------------------------------*/
+	localStorage.monstersCaught = monstersCaught;
+}
 var heroWallCollision = function(){
-	if(hero.y<0){
-		hero.y = 0;
+	if(hero.y<0){ //if the hero top part of the image hits the top of the screen stop it
+		hero.y = 0; //stop it at the top wall
+	}else if(hero.y>canvas.height-32){ //if the hero's bottom image touches the bottom of the screen 
+		hero.y = canvas.height-32; //stop it at the bottom wall
 	}
-	if(hero.y>canvas.height-32){
-		hero.y = canvas.height-32;
-	}
-	if (hero.x<0){
-		hero.x = 0;
-	}
-	if (hero.x>canvas.width-32){
-		hero.x = canvas.width-32;
+	if (hero.x<0){ //if the hero's left side of the image touches the left side of the screen
+		hero.x = 0; //stop it at the left wall wall
+	}else if (hero.x>canvas.width-32){ //if the hero's right side of the image touches the right side of the screen
+		hero.x = canvas.width-32; //stop it at the right wall wall (the 32 is a constant factor might want to update this)
 	}
 }
 // Draw everything
