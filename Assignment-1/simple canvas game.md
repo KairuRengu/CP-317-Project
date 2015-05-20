@@ -1,6 +1,6 @@
 Modify the simple canvas game established in the following link: http://www.lostdecadegames.com/how-to-make-a-simple-html5-canvas-game/
 
-Current Progress:
+#Current Progress:#
 
 1. Window matches the window size of the monitor divided by two
 
@@ -16,7 +16,8 @@ Current Progress:
 
 7. Audio file for background
 
-To Do:
+#To Do:#
+
 *New Goblins appear every 3 seconds
 
 *Goblins movement
