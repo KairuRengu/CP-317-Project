@@ -64,6 +64,7 @@ var update = function (modifier) {
 	}
 	if (40 in keysDown) { // Player holding down
 		hero.y += hero.speed * modifier;
+		console.log(hero.y);
 	}
 	if (37 in keysDown) { // Player holding left
 		hero.x -= hero.speed * modifier;
@@ -71,7 +72,7 @@ var update = function (modifier) {
 	if (39 in keysDown) { // Player holding right
 		hero.x += hero.speed * modifier;
 	}
-
+	wallCollision();
 	// Are they touching?
 	if (
 		hero.x <= (monster.x + 32)
@@ -83,7 +84,20 @@ var update = function (modifier) {
 		reset();
 	}
 };
-
+var wallCollision = function(){
+	if(hero.y<0){
+		hero.y = 0;
+	}
+	if(hero.y>canvas.height-32){
+		hero.y = canvas.height-32;
+	}
+	if (hero.x<0){
+		hero.x = 0;
+	}
+	if (hero.x>canvas.width-32){
+		hero.x = canvas.width-32;
+	}
+}
 // Draw everything
 var render = function () {
 	if (bgReady) {
@@ -111,6 +125,7 @@ var main = function () {
 	var now = Date.now();
 	var delta = now - then;
 	update(delta / 1000);
+	
 	render();
 
 	then = now;
