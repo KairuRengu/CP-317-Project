@@ -38,7 +38,7 @@ var hero = {
 var monster = {};
 
 if (localStorage.getItem("monstersKilled")){ //if they have played the game before continue from where they last left off
-	var monstersCaught = Number(localStorage.getItem("monstersKilled"));
+	var monstersCaught = Number(localStorage.getItem("monstersCaught"));
 }else{ //if they haven't played the game before start the monster count at 0
 	var monstersCaught = 0;
 	
