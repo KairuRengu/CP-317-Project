@@ -1,11 +1,11 @@
-// Create the canvas
+//-------------------------------- Create the canvas --------------------------------
 var canvas = document.createElement("canvas");
 var ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth/2;
 canvas.height = window.innerHeight/2;
 document.body.appendChild(canvas);
 
-// Background image
+//-------------------------------- Background image --------------------------------
 var bgReady = false;
 var bgImage = new Image();
 bgImage.onload = function () {
@@ -13,7 +13,7 @@ bgImage.onload = function () {
 };
 bgImage.src = "images/background.png";
 
-// Hero image
+//-------------------------------- Hero image --------------------------------
 var heroReady = false;
 var heroImage = new Image();
 heroImage.onload = function () {
@@ -23,7 +23,7 @@ heroImage.onload = function () {
 };
 heroImage.src = "images/hero.png";
 
-// Monster image
+//-------------------------------- Monster image --------------------------------
 var monsterReady = false;
 var monsterImage = new Image();
 monsterImage.onload = function () {
@@ -31,23 +31,32 @@ monsterImage.onload = function () {
 };
 monsterImage.src = "images/monster.png";
 
-// Game objects
+//-------------------------------- Game objects --------------------------------
 var hero = {
 	speed: 256 // movement in pixels per second
 };
 var monster = {};
 
-if (localStorage.getItem("monstersCaught")){ //if they have played the game before continue from where they last left off
+
+//--------------------------------  Local Storage Initialization --------------------------------
+if (localStorage.getItem("monstersCaught")){ 
+//if they have played the game before continue from where they last left off
 	var monstersCaught = Number(localStorage.getItem("monstersCaught"));
 }else{ //if they haven't played the game before start the monster count at 0
 	var monstersCaught = 0;
 	
 }
-var backgroundAudio = new Audio('audio/fm6 .mp3');
-backgroundAudio.volume = 0.5
-backgroundAudio.play();
 
-// Handle keyboard controls
+//-------------------------------- Background Audio Initialization --------------------------------
+var backgroundAudio = new Audio('audio/fm6 .mp3'); //play from this audio file, copyright stuff
+backgroundAudio.volume = 0.5 //set the volume so it doesn't kill people's ears
+backgroundAudio.addEventListener('ended', function() { //set an event listener so that when the music ends it restarts
+    this.currentTime = 0; //the variable this refers to backgroundAudio and restarts at the 0 second mark
+    this.play();
+}, false);
+backgroundAudio.play(); //play the audio
+
+//-------------------------------- Handle keyboard controls --------------------------------
 var keysDown = {};
 
 addEventListener("keydown", function (e) {
@@ -58,7 +67,7 @@ addEventListener("keyup", function (e) {
 	delete keysDown[e.keyCode];
 }, false);
 
-// Reset the game when the player catches a monster
+//-------------------------------- Reset the game when the player catches a monster --------------------------------
 var reset = function () {
 
 
@@ -66,7 +75,7 @@ var reset = function () {
 	monster.x = 32 + (Math.random() * (canvas.width - 64));
 	monster.y = 32 + (Math.random() * (canvas.height - 64));
 };
-// Update game objects
+//-------------------------------- Update game objects --------------------------------
 var update = function (modifier) {
 	if (38 in keysDown) { // Player holding up
 		hero.y -= hero.speed * modifier;
@@ -80,7 +89,7 @@ var update = function (modifier) {
 	if (39 in keysDown) { // Player holding right
 		hero.x += hero.speed * modifier;
 	}
-	
+// -------------------------------- Hero and Goblin Detection --------------------------------	
 	// Are they touching?
 	if (
 		hero.x <= (monster.x + 32)
@@ -96,9 +105,11 @@ var update = function (modifier) {
 	heroWallCollision();
 	
 };
+// -------------------------------- Store Local Data --------------------------------
 var storeData = function(monstersCaught){
 	localStorage.monstersCaught = monstersCaught; //store the data locally	
 }
+// -------------------------------- Hero Wall Collision Detection --------------------------------
 var heroWallCollision = function(){
 	if(hero.y<0){ //if the hero top part of the image hits the top of the screen stop it
 		hero.y = 0; //stop it at the top wall
@@ -111,7 +122,8 @@ var heroWallCollision = function(){
 		hero.x = canvas.width-32; //stop it at the right wall wall (the 32 is a constant factor might want to update this)
 	}
 }
-// Draw everything
+
+//-------------------------------- Draw everything --------------------------------
 var render = function () {
 	if (bgReady) {
 		ctx.drawImage(bgImage, 0, 0, bgImage.width, bgImage.height, 0, 0, canvas.width, canvas.height);
@@ -133,7 +145,7 @@ var render = function () {
 	ctx.fillText("Goblins caught: " + monstersCaught, 32, 32);
 };
 
-// The main game loop
+// -------------------------------- The main game loop --------------------------------
 var main = function () {
 	var now = Date.now();
 	var delta = now - then;
@@ -147,7 +159,7 @@ var main = function () {
 	requestAnimationFrame(main);
 };
 
-// Cross-browser support for requestAnimationFrame
+// -------------------------------- Cross-browser support for requestAnimationFrame --------------------------------
 var w = window;
 requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.msRequestAnimationFrame || w.mozRequestAnimationFrame;
 
