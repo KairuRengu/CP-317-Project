@@ -72,7 +72,7 @@ var update = function (modifier) {
 	if (39 in keysDown) { // Player holding right
 		hero.x += hero.speed * modifier;
 	}
-	wallCollision();
+	heroWallCollision();
 	// Are they touching?
 	if (
 		hero.x <= (monster.x + 32)
@@ -84,7 +84,7 @@ var update = function (modifier) {
 		reset();
 	}
 };
-var wallCollision = function(){
+var heroWallCollision = function(){
 	if(hero.y<0){
 		hero.y = 0;
 	}
