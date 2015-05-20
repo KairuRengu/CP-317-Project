@@ -43,7 +43,9 @@ if (localStorage.getItem("monstersCaught")){ //if they have played the game befo
 	var monstersCaught = 0;
 	
 }
-
+var audio = new Audio('audio/fm6 .mp3');
+audio.volume = 0.5
+audio.play();
 
 // Handle keyboard controls
 var keysDown = {};
@@ -95,11 +97,7 @@ var update = function (modifier) {
 	
 };
 var storeData = function(monstersCaught){
-/*--------------------------------------
-Problem with function:
-It stores the oldest version from refresh and not the newest updated one
-----------------------------------------*/
-	localStorage.monstersCaught = monstersCaught;
+	localStorage.monstersCaught = monstersCaught; //store the data locally	
 }
 var heroWallCollision = function(){
 	if(hero.y<0){ //if the hero top part of the image hits the top of the screen stop it
