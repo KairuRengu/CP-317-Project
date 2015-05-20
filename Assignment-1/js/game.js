@@ -100,6 +100,7 @@ var update = function (modifier) {
 		++monstersCaught;
 		storeData(monstersCaught);
 		reset();
+		//Play Collision Audio
 		var collisionAudio = new Audio('audio/normal-hitclap.wav');
 		collisionAudio.volume= 0.2
 		collisionAudio.play();
