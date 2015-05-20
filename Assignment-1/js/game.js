@@ -28,6 +28,10 @@ var monsterReady = false;
 var monsterImage = new Image();
 monsterImage.onload = function () {
 	monsterReady = true;
+	monster.x = canvas.width / 2;
+	monster.y = canvas.height / 2;
+	monster.xdir = 1;
+	monster.ydir = 1;
 };
 monsterImage.src = "images/monster.png";
 
@@ -35,7 +39,9 @@ monsterImage.src = "images/monster.png";
 var hero = {
 	speed: 256 // movement in pixels per second
 };
-var monster = {};
+var monster = {
+	speed: 256 // monster
+};
 
 
 //--------------------------------  Local Storage Initialization --------------------------------
@@ -89,6 +95,11 @@ var update = function (modifier) {
 	if (39 in keysDown) { // Player holding right
 		hero.x += hero.speed * modifier;
 	}
+	
+	monster.x += monster.speed * (modifier * monster.xdir); // Move monster along x-axis at set speed * x-direction
+	monster.y += monster.speed * (modifier * monster.ydir); // Move monster along y-axis at set speed * y-direction
+
+	
 // -------------------------------- Hero and Goblin Detection --------------------------------	
 	// Are they touching?
 	if (
@@ -102,22 +113,23 @@ var update = function (modifier) {
 		reset();
 		//Play Collision Audio
 		var collisionAudio = new Audio('audio/normal-hitclap.wav');
-		collisionAudio.volume= 0.2
+		collisionAudio.volume= 0.2;
 		collisionAudio.play();
 	}
 	
 	heroWallCollision();
+	monsterWallCollision();
 	
 };
 // -------------------------------- Store Local Data --------------------------------
 var storeData = function(monstersCaught){
 	localStorage.monstersCaught = monstersCaught; //store the data locally	
 }
-// -------------------------------- Hero Wall Collision Detection --------------------------------
+// -------------------------------- Hero and Monster Wall Collision Detection --------------------------------
 var heroWallCollision = function(){
 	if(hero.y<0){ //if the hero top part of the image hits the top of the screen stop it
 		hero.y = 0; //stop it at the top wall
-	}else if(hero.y>canvas.height-32){ //if the hero's bottom image touches the bottom of the screen 
+	}else if(hero.y>canvas.height-32){ //if the hero's bottom image touches the bottom of the screen
 		hero.y = canvas.height-32; //stop it at the bottom wall
 	}
 	if (hero.x<0){ //if the hero's left side of the image touches the left side of the screen
@@ -126,6 +138,19 @@ var heroWallCollision = function(){
 		hero.x = canvas.width-32; //stop it at the right wall wall (the 32 is a constant factor might want to update this)
 	}
 }
+
+ var monsterWallCollision = function(){ // Detects if monster is at a wall
+	 if(monster.y<0){ // if monster is at top part of image, switch direction on the y-axis
+		 monster.ydir = 1;
+	 } else if (monster.y>canvas.height-32){ // if monster is at bottom part of image, switch direction on y-axis
+		 monster.ydir = -1;
+	 }
+	 if(monster.x<0){ // if monster is at the left side of the image, switch direction on the x-axis
+		 monster.xdir = 1;
+	 } else if (monster.x>canvas.width-32){ // if monster is at the right side of the image, switch direction on the x-axis
+		 monster.xdir = -1;
+	 }
+ }
 
 //-------------------------------- Draw everything --------------------------------
 var render = function () {
