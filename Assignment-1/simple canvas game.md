@@ -12,6 +12,10 @@ Current Progress:
 
 5. Hero catching a goblin is working properly
 
+6. Audio files for killing Goblins
+
+7. Audio file for background
+
 To Do:
 *New Goblins appear every 3 seconds
 
@@ -19,8 +23,6 @@ To Do:
 
 *Goblins bouncing off of wall
 
-*Audio files for killing Goblins
 
-*Audio file for background
 
 *Additional Enhancements
