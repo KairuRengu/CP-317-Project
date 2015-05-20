@@ -18,6 +18,8 @@ var heroReady = false;
 var heroImage = new Image();
 heroImage.onload = function () {
 	heroReady = true;
+	hero.x = canvas.width / 2;
+	hero.y = canvas.height / 2;
 };
 heroImage.src = "images/hero.png";
 
@@ -49,14 +51,12 @@ addEventListener("keyup", function (e) {
 
 // Reset the game when the player catches a monster
 var reset = function () {
-	hero.x = canvas.width / 2;
-	hero.y = canvas.height / 2;
+
 
 	// Throw the monster somewhere on the screen randomly
 	monster.x = 32 + (Math.random() * (canvas.width - 64));
 	monster.y = 32 + (Math.random() * (canvas.height - 64));
 };
-
 // Update game objects
 var update = function (modifier) {
 	if (38 in keysDown) { // Player holding up
@@ -110,7 +110,6 @@ var render = function () {
 var main = function () {
 	var now = Date.now();
 	var delta = now - then;
-
 	update(delta / 1000);
 	render();
 
