@@ -81,8 +81,20 @@ var reset = function () {
 	monster.x = 32 + (Math.random() * (canvas.width - 64));
 	monster.y = 32 + (Math.random() * (canvas.height - 64));
 };
+
+//-------------------------------- On Mouse Movement --------------------------------
+//Is this function supposed to replace the keydown presses?
+onmousemove = function(event){
+	console.log("X"+event.clientX);
+	console.log("Y"+event.clientY);
+}
+onmouseclick = function(event){
+	console.log("X"+event.clientX);
+	console.log("Y"+event.clientY);
+}
 //-------------------------------- Update game objects --------------------------------
 var update = function (modifier) {
+
 	if (38 in keysDown) { // Player holding up
 		hero.y -= hero.speed * modifier;
 	}
@@ -178,7 +190,7 @@ var render = function () {
 var main = function () {
 	var now = Date.now();
 	var delta = now - then;
-	update(delta / 1000);
+	update(delta / 1000, event);
 	
 	render();
 
