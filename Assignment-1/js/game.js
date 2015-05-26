@@ -35,12 +35,25 @@ monsterImage.onload = function () {
 };
 monsterImage.src = "images/monster.png";
 
+// ------------------------------- Projectile image ----------------------------
+var projectileReady = false;
+var projectileImage = new Image();
+projectileImage.onload = function () {
+	projectileReady = true;
+	projectile.x = hero.x;
+	projectile.y = hero.y;
+}
+projectileImage.src = "images/monster.png" // Temporary Projectile Image for Testing
+
 //-------------------------------- Game objects --------------------------------
 var hero = {
 	speed: 256 // movement in pixels per second
 };
 var monster = {
 	speed: 256 // monster
+};
+var projectile = {
+	speed: 256 // projectile speed
 };
 
 
