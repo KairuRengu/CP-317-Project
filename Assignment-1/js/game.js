@@ -108,6 +108,7 @@ onmousemove = function(event){
 	console.log("Y"+event.clientY);
 }
 onmouseclick = function(event){
+	renderProjectile() // Doesnt currently do anything, needs fixing.  Was hoping it would draw a projectile on click
 	console.log("X"+event.clientX);
 	console.log("Y"+event.clientY);
 }
@@ -233,6 +234,12 @@ var render = function () {
 	ctx.textBaseline = "top";
 	ctx.fillText("Goblins caught: " + monstersCaught, 32, 32);
 };
+
+var renderProjectile = function () {
+	if (projectileReady) {
+		ctx.drawImage(projectileImage, projectile.x, projectile.y);
+	}
+}
 
 // -------------------------------- The main game loop --------------------------------
 var main = function () {
