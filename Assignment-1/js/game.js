@@ -37,9 +37,11 @@ monsterImage.src = "images/monster.png";
 
 // ------------------------------- Projectile image ----------------------------
 var projectileReady = false;
+var projectileExists = false;
 var projectileImage = new Image();
 projectileImage.onload = function () {
 	projectileReady = true;
+	projectileExists = true;
 	projectile.x = hero.x;
 	projectile.y = hero.y;
 }
@@ -87,13 +89,17 @@ addEventListener("keyup", function (e) {
 }, false);
 
 //-------------------------------- Reset the game when the player catches a monster --------------------------------
-var reset = function () {
+var monsterReset = function () { // This will have to change if we want multiple monsters since it only handles one monster
 
 
 	// Throw the monster somewhere on the screen randomly
 	monster.x = 32 + (Math.random() * (canvas.width - 64));
 	monster.y = 32 + (Math.random() * (canvas.height - 64));
 };
+
+var projectileReset = function () { // This needs to destroy the projectile on wall collision or monster collision
+	
+}
 
 //-------------------------------- On Mouse Movement --------------------------------
 //Is this function supposed to replace the keydown presses?
@@ -135,15 +141,31 @@ var update = function (modifier) {
 	) {
 		++monstersCaught;
 		storeData(monstersCaught);
-		reset();
+		monsterReset();
 		//Play Collision Audio
 		var collisionAudio = new Audio('audio/normal-hitclap.wav');
 		collisionAudio.volume= 0.2;
 		collisionAudio.play();
 	}
+	// Did projectile collide with monster
+	if (
+		projectile.x <= (monster.x + 32)
+		&& monster.x <= (projectile.x + 32)
+		&& projectile.y <= (monster.y +32)
+		&& monster.y <= (projectile + 32)
+	) {
+		++monstersCaught;
+		storeData(monstersCaught);
+		monsterReset();
+		//Play Collision Audio
+		var collisionAudio = new Audio('audio/normal-hitclap.wav'); // Might be a way to reduce redundancy here with hero collision noise
+		collisionAudio.volume = 0.2; // Since this is the same code as in the if statement above
+		collisionAudio.play();
+	}
 	
 	heroWallCollision();
 	monsterWallCollision();
+	projectileWallCollision();
 	
 };
 // -------------------------------- Store Local Data --------------------------------
@@ -152,28 +174,41 @@ var storeData = function(monstersCaught){
 }
 // -------------------------------- Hero and Monster Wall Collision Detection --------------------------------
 var heroWallCollision = function(){
-	if(hero.y<0){ //if the hero top part of the image hits the top of the screen stop it
+	if ( hero.y < 0 ){ //if the hero top part of the image hits the top of the screen stop it
 		hero.y = 0; //stop it at the top wall
-	}else if(hero.y>canvas.height-32){ //if the hero's bottom image touches the bottom of the screen
-		hero.y = canvas.height-32; //stop it at the bottom wall
+	} else if ( hero.y > canvas.height - 32 ){ //if the hero's bottom image touches the bottom of the screen
+		hero.y = canvas.height - 32; //stop it at the bottom wall
 	}
-	if (hero.x<0){ //if the hero's left side of the image touches the left side of the screen
+	if ( hero.x < 0 ){ //if the hero's left side of the image touches the left side of the screen
 		hero.x = 0; //stop it at the left wall wall
-	}else if (hero.x>canvas.width-32){ //if the hero's right side of the image touches the right side of the screen
-		hero.x = canvas.width-32; //stop it at the right wall wall (the 32 is a constant factor might want to update this)
+	} else if ( hero.x > canvas.width - 32 ){ //if the hero's right side of the image touches the right side of the screen
+		hero.x = canvas.width - 32; //stop it at the right wall wall (the 32 is a constant factor might want to update this)
 	}
 }
 
  var monsterWallCollision = function(){ // Detects if monster is at a wall
-	 if(monster.y<0){ // if monster is at top part of image, switch direction on the y-axis
+	 if ( monster.y < 0 ){ // if monster is at top part of image, switch direction on the y-axis
 		 monster.ydir = 1;
-	 } else if (monster.y>canvas.height-32){ // if monster is at bottom part of image, switch direction on y-axis
+	 } else if ( monster.y > canvas.height - 32 ){ // if monster is at bottom part of image, switch direction on y-axis
 		 monster.ydir = -1;
 	 }
-	 if(monster.x<0){ // if monster is at the left side of the image, switch direction on the x-axis
+	 if ( monster.x < 0 ){ // if monster is at the left side of the image, switch direction on the x-axis
 		 monster.xdir = 1;
-	 } else if (monster.x>canvas.width-32){ // if monster is at the right side of the image, switch direction on the x-axis
+	 } else if ( monster.x > canvas.width - 32){ // if monster is at the right side of the image, switch direction on the x-axis
 		 monster.xdir = -1;
+	 }
+ }
+ 
+ var projectileWallCollision = function(){
+	 if ( projectile.y < 0 ){
+		 
+	 } else if ( projectile.y > canvas.height - 32 ){
+		 
+	 }
+	 if ( projectile.x < 0 ){
+		 
+	 } else if ( projectile.x > canvas.width - 32){
+		 
 	 }
  }
 
@@ -219,5 +254,5 @@ requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame
 
 // Let's play this game!
 var then = Date.now();
-reset();
+monsterReset();
 main();
