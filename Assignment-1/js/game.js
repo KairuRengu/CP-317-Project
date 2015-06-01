@@ -7,6 +7,7 @@ Description : Create a simple canvas game
 
 //-------------------------------- Create the canvas --------------------------------
 var canvas = document.createElement("canvas");
+
 var ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth/2;
 canvas.height = window.innerHeight/2;
@@ -69,6 +70,12 @@ var projectile = {
 	yDirection : 0
 };
 
+var clickDrag ={
+	isClickDrag : false,
+	changeClickDrag : function(setValue){
+		this.isClickDrag = setValue;
+	}
+};
 
 //--------------------------------  Local Storage Initialization --------------------------------
 if (localStorage.getItem("monstersCaught")){ 
@@ -112,41 +119,31 @@ var projectileReset = function () { // This needs to destroy the projectile on w
 
 //-------------------------------- On Mouse Movement --------------------------------
 //Current when the user presses the left click in renders a a monster
-
-onmousedown = function(event){
-	projectile.projectileExists = true; //sets the projectile to exist
-	//sets the projectile to the hero's location
-	projectile.x = hero.x + 16;  
-	projectile.y = hero.y + 16;
-	//Figure out the direction to shoot the bullet
-	if(event.clientY < hero.y && event.clientX < hero.x){ //shoot top left
-		projectile.xDirection = -1;
-		projectile.yDirection = -1;
-	}else if(event.clientY > hero.y + 32 && event.clientX < hero.x){ //shoot bottom left
-		projectile.xDirection = -1;
-		projectile.yDirection = 1;
-	}else if(event.clientY < hero.y && event.clientX > hero.x + 32){ //shoot top right
-		projectile.xDirection = 1;
-		projectile.yDirection = -1;
-	}else if(event.clientY > hero.y + 32 && event.clientX > hero.x + 32){ //shoot bottom right
-		projectile.xDirection = 1;
-		projectile.yDirection = 1;
-	}else if(event.clientY < hero.y) { //shoot up
-		projectile.xDirection = 0;
-		projectile.yDirection = -1;
-	}else if(event.clientY > hero.y + 32){ //shoot down
-		projectile.xDirection = 0;
-		projectile.yDirection = 1;
-	}else if(event.clientX < hero.x) { //shoot left
-		projectile.xDirection = -1;
-		projectile.yDirection = 0;
-	}else if(event.clientX > hero.x + 32){ //shoot right
-		projectile.xDirection = 1;
-		projectile.yDirection = 0;
+//Current when the user presses the left click in renders a a monster
+canvas.addEventListener("mousedown", function(event){ 
+	if(event.clientX >= hero.x && event.clientX <= hero.x + 32 && event.clientY >= hero.y && event.clientY <= hero.y + 32){
+		clickDrag.changeClickDrag(true);
 	}
-	projectileAudio.volume = 0.2 //set the volume so it doesn't kill people's ears
-	projectileAudio.play();
-}
+}, false);
+
+canvas.addEventListener("mousemove", function(event){
+	if(clickDrag.isClickDrag == true){
+		hero.x = event.clientX;
+		hero.y = event.clientY;
+	}
+}, false);
+canvas.addEventListener("mouseup", function(event){
+	clickDrag.changeClickDrag(false);
+	//if the user does not click on the hero then shoot a projectile
+	if( (event.clientX < hero.x && event.clientY < hero.y)||
+		(event.clientX < hero.x && event.clientY > hero.y + 32)||
+		(event.clientX > hero.x + 32 && event.clientY < hero.y)||
+		(event.clientX > hero.x + 32 && event.clientY > hero.y + 32) ||
+		 event.clientX < hero.x || event.clientX > hero.x + 32 || event.clientY < hero.y || event.clientY > hero.y + 32
+	){
+		shootProjectile(event);
+	}
+},false);
 //-------------------------------- Update game objects --------------------------------
 var update = function (modifier) {
 
@@ -258,7 +255,42 @@ var heroWallCollision = function(){
 		 projectileExists = false;
 	 }
  }
-
+ //----------------------------------------Shoot Projectiles----------------------
+var shootProjectile = function(event){
+	//shoot the projectile
+	projectile.projectileExists = true; //sets the projectile to exist
+	//sets the projectile to the hero's location
+	projectile.x = hero.x + 16;  
+	projectile.y = hero.y + 16;
+	//Figure out the direction to shoot the bullet
+	if(event.clientY < hero.y && event.clientX < hero.x){ //shoot top left
+		projectile.xDirection = -1;
+		projectile.yDirection = -1;
+	}else if(event.clientY > hero.y + 32 && event.clientX < hero.x){ //shoot bottom left
+		projectile.xDirection = -1;
+		projectile.yDirection = 1;
+	}else if(event.clientY < hero.y && event.clientX > hero.x + 32){ //shoot top right
+		projectile.xDirection = 1;
+		projectile.yDirection = -1;
+	}else if(event.clientY > hero.y + 32 && event.clientX > hero.x + 32){ //shoot bottom right
+		projectile.xDirection = 1;
+		projectile.yDirection = 1;
+	}else if(event.clientY < hero.y) { //shoot up
+		projectile.xDirection = 0;
+		projectile.yDirection = -1;
+	}else if(event.clientY > hero.y + 32){ //shoot down
+		projectile.xDirection = 0;
+		projectile.yDirection = 1;
+	}else if(event.clientX < hero.x) { //shoot left
+		projectile.xDirection = -1;
+		projectile.yDirection = 0;
+	}else if(event.clientX > hero.x + 32){ //shoot right
+		projectile.xDirection = 1;
+		projectile.yDirection = 0;
+	}
+	projectileAudio.volume = 0.2 //set the volume so it doesn't kill people's ears
+	projectileAudio.play();
+}
 //-------------------------------- Draw everything --------------------------------
 var render = function () {
 	if (bgReady) {
