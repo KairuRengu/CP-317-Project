@@ -45,7 +45,7 @@ projectileImage.onload = function () {
 	projectile.x = hero.x;
 	projectile.y = hero.y;
 }
-
+var projectileAudio = new Audio('audio/pew-sound.wav'); //play from this audio file
 projectileImage.src = "images/bullet.png" // Temporary Projectile Image for Testing
 
 //-------------------------------- Game objects --------------------------------
@@ -112,8 +112,8 @@ onmousedown = function(event){
 	projectile.y = hero.y;
 	projectile.xDirection = 1;
 	projectile.yDirection = 1;
-	console.log(monster.x);
-	console.log(monster.y);
+	projectileAudio.volume = 0.2 //set the volume so it doesn't kill people's ears
+	projectileAudio.play();
 }
 //-------------------------------- Update game objects --------------------------------
 var update = function (modifier) {
@@ -145,7 +145,6 @@ var update = function (modifier) {
 		if(projectile.xDirection == -1 ){ //left
 			projectile.x -= projectile.speed * (modifier);
 		}
-
 	}
 	monster.x += monster.speed * (modifier * monster.xdir); // Move monster along x-axis at set speed * x-direction
 	monster.y += monster.speed * (modifier * monster.ydir); // Move monster along y-axis at set speed * y-direction
