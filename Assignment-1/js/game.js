@@ -47,8 +47,6 @@ var projectileReady = false;
 var projectileExists = false;
 var projectileImage = new Image();
 projectileImage.onload = function () {
-	projectileReady = true;
-	projectileExists = false;
 	projectile.x = hero.x;
 	projectile.y = hero.y;
 }
@@ -63,7 +61,12 @@ var monster = {
 	speed: 256 // monster
 };
 var projectile = {
-	speed: 512 // projectile speed
+	projectileExists : false,
+	speed: 512, // projectile speed
+	x : 0,
+	y : 0,
+	xDirection : 0,
+	yDirection : 0
 };
 
 
@@ -98,22 +101,20 @@ addEventListener("keyup", function (e) {
 
 //-------------------------------- Reset the game when the player catches a monster --------------------------------
 var monsterReset = function () { // This will have to change if we want multiple monsters since it only handles one monster
-
-
 	// Throw the monster somewhere on the screen randomly
 	monster.x = 32 + (Math.random() * (canvas.width - 64));
 	monster.y = 32 + (Math.random() * (canvas.height - 64));
 };
 
 var projectileReset = function () { // This needs to destroy the projectile on wall collision or monster collision
-	projectileExists = false;
+	projectile.projectileExists = false;
 }
 
 //-------------------------------- On Mouse Movement --------------------------------
 //Current when the user presses the left click in renders a a monster
 
 onmousedown = function(event){
-	projectileExists = true; //sets the projectile to exist
+	projectile.projectileExists = true; //sets the projectile to exist
 	//sets the projectile to the hero's location
 	projectile.x = hero.x + 16;  
 	projectile.y = hero.y + 16;
@@ -163,7 +164,7 @@ var update = function (modifier) {
 	}
 	
 	//will shoot the bullet in a certain direction
-	if(projectileExists){
+	if(projectile.projectileExists){
 		if( projectile.yDirection == -1){ //up
 			projectile.y -= projectile.speed * (modifier);
 		}
@@ -271,7 +272,7 @@ var render = function () {
 	if (monsterReady) {
 		ctx.drawImage(monsterImage, monster.x, monster.y);
 	}
-	if (projectileExists){
+	if (projectile.projectileExists){
 		ctx.drawImage(projectileImage, projectile.x, projectile.y);
 	}
 	// Score
