@@ -60,7 +60,7 @@ var hero = {
 	speed: 256 // movement in pixels per second
 };
 var monster = {
-	speed: 0 // monster
+	speed: 256 // monster
 };
 var projectile = {
 	speed: 512 // projectile speed
@@ -83,7 +83,7 @@ backgroundAudio.addEventListener('ended', function() { //set an event listener s
     this.currentTime = 0; //the variable this refers to backgroundAudio and restarts at the 0 second mark
     this.play();
 }, false);
-//backgroundAudio.play(); //play the audio
+backgroundAudio.play(); //play the audio
 
 //-------------------------------- Handle keyboard controls --------------------------------
 var keysDown = {};
