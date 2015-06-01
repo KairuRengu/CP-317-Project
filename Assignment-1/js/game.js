@@ -28,8 +28,8 @@ var monsterReady = false;
 var monsterImage = new Image();
 monsterImage.onload = function () {
 	monsterReady = true;
-	monster.x = canvas.width / 2;
-	monster.y = canvas.height / 2;
+	monster.x = canvas.width;
+	monster.y = canvas.height;
 	monster.xdir = 1;
 	monster.ydir = 1;
 };
@@ -41,21 +41,22 @@ var projectileExists = false;
 var projectileImage = new Image();
 projectileImage.onload = function () {
 	projectileReady = true;
-	projectileExists = true;
+	projectileExists = false;
 	projectile.x = hero.x;
 	projectile.y = hero.y;
 }
-projectileImage.src = "images/monster.png" // Temporary Projectile Image for Testing
+
+projectileImage.src = "images/bullet.png" // Temporary Projectile Image for Testing
 
 //-------------------------------- Game objects --------------------------------
 var hero = {
 	speed: 256 // movement in pixels per second
 };
 var monster = {
-	speed: 256 // monster
+	speed: 0 // monster
 };
 var projectile = {
-	speed: 256 // projectile speed
+	speed: 512 // projectile speed
 };
 
 
@@ -75,7 +76,7 @@ backgroundAudio.addEventListener('ended', function() { //set an event listener s
     this.currentTime = 0; //the variable this refers to backgroundAudio and restarts at the 0 second mark
     this.play();
 }, false);
-backgroundAudio.play(); //play the audio
+//backgroundAudio.play(); //play the audio
 
 //-------------------------------- Handle keyboard controls --------------------------------
 var keysDown = {};
@@ -98,19 +99,21 @@ var monsterReset = function () { // This will have to change if we want multiple
 };
 
 var projectileReset = function () { // This needs to destroy the projectile on wall collision or monster collision
-	
+	projectileExists = false;
 }
 
 //-------------------------------- On Mouse Movement --------------------------------
-//Is this function supposed to replace the keydown presses?
-onmousemove = function(event){
-	console.log("X"+event.clientX);
-	console.log("Y"+event.clientY);
-}
-onmouseclick = function(event){
-	renderProjectile() // Doesnt currently do anything, needs fixing.  Was hoping it would draw a projectile on click
-	console.log("X"+event.clientX);
-	console.log("Y"+event.clientY);
+//Current when the user presses the left click in renders a a monster
+
+onmousedown = function(event){
+	projectileExists = true; //sets the projectile to exist
+	//sets the projectile to the hero's location
+	projectile.x = hero.x;  
+	projectile.y = hero.y;
+	projectile.xDirection = 1;
+	projectile.yDirection = 1;
+	console.log(monster.x);
+	console.log(monster.y);
 }
 //-------------------------------- Update game objects --------------------------------
 var update = function (modifier) {
@@ -128,10 +131,24 @@ var update = function (modifier) {
 		hero.x += hero.speed * modifier;
 	}
 	
+	//will shoot the bullet in a certain direction
+	if(projectileExists){
+		if( projectile.yDirection == -1){ //up
+			projectile.y -= projectile.speed * (modifier);
+		}
+		if(projectile.yDirection == 1){ //down
+			projectile.y += projectile.speed * (modifier);
+		}
+		if(projectile.xDirection == 1){ //right
+			projectile.x += projectile.speed * (modifier);
+		}
+		if(projectile.xDirection == -1 ){ //left
+			projectile.x -= projectile.speed * (modifier);
+		}
+
+	}
 	monster.x += monster.speed * (modifier * monster.xdir); // Move monster along x-axis at set speed * x-direction
 	monster.y += monster.speed * (modifier * monster.ydir); // Move monster along y-axis at set speed * y-direction
-
-	
 // -------------------------------- Hero and Goblin Detection --------------------------------	
 	// Are they touching?
 	if (
@@ -150,11 +167,9 @@ var update = function (modifier) {
 	}
 	// Did projectile collide with monster
 	if (
-		projectile.x <= (monster.x + 32)
-		&& monster.x <= (projectile.x + 32)
-		&& projectile.y <= (monster.y +32)
-		&& monster.y <= (projectile + 32)
+		projectile.x <= (monster.x + 32) && projectile.y <= monster.y + 32 && projectile.x >= monster.x && projectile.y >= monster.y
 	) {
+		console.log("hit me");
 		++monstersCaught;
 		storeData(monstersCaught);
 		monsterReset();
@@ -202,14 +217,14 @@ var heroWallCollision = function(){
  
  var projectileWallCollision = function(){
 	 if ( projectile.y < 0 ){
-		 
+		 projectileExists = false;
 	 } else if ( projectile.y > canvas.height - 32 ){
-		 
+		 projectileExists = false;
 	 }
 	 if ( projectile.x < 0 ){
-		 
+		 projectileExists = false;
 	 } else if ( projectile.x > canvas.width - 32){
-		 
+		 projectileExists = false;
 	 }
  }
 
@@ -226,7 +241,9 @@ var render = function () {
 	if (monsterReady) {
 		ctx.drawImage(monsterImage, monster.x, monster.y);
 	}
-
+	if (projectileExists){
+		ctx.drawImage(projectileImage, projectile.x, projectile.y);
+	}
 	// Score
 	ctx.fillStyle = "rgb(250, 250, 250)";
 	ctx.font = "24px Helvetica";
@@ -235,11 +252,7 @@ var render = function () {
 	ctx.fillText("Goblins caught: " + monstersCaught, 32, 32);
 };
 
-var renderProjectile = function () {
-	if (projectileReady) {
-		ctx.drawImage(projectileImage, projectile.x, projectile.y);
-	}
-}
+
 
 // -------------------------------- The main game loop --------------------------------
 var main = function () {
