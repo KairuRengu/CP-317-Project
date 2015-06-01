@@ -1,3 +1,10 @@
+/*-------------------------------------------------------------------
+Names: Kyle Leng, Shawn Cramp
+Student Ids: 1206190790, 
+Description : Create a simple canvas game
+---------------------------------------------------------------------*/
+
+
 //-------------------------------- Create the canvas --------------------------------
 var canvas = document.createElement("canvas");
 var ctx = canvas.getContext("2d");
