@@ -108,10 +108,34 @@ var projectileReset = function () { // This needs to destroy the projectile on w
 onmousedown = function(event){
 	projectileExists = true; //sets the projectile to exist
 	//sets the projectile to the hero's location
-	projectile.x = hero.x;  
-	projectile.y = hero.y;
-	projectile.xDirection = 1;
-	projectile.yDirection = 1;
+	projectile.x = hero.x + 16;  
+	projectile.y = hero.y + 16;
+	//Figure out the direction to shoot the bullet
+	if(event.clientY < hero.y && event.clientX < hero.x){ //shoot top left
+		projectile.xDirection = -1;
+		projectile.yDirection = -1;
+	}else if(event.clientY > hero.y + 32 && event.clientX < hero.x){ //shoot bottom left
+		projectile.xDirection = -1;
+		projectile.yDirection = 1;
+	}else if(event.clientY < hero.y && event.clientX > hero.x + 32){ //shoot top right
+		projectile.xDirection = 1;
+		projectile.yDirection = -1;
+	}else if(event.clientY > hero.y + 32 && event.clientX > hero.x + 32){ //shoot bottom right
+		projectile.xDirection = 1;
+		projectile.yDirection = 1;
+	}else if(event.clientY < hero.y) { //shoot up
+		projectile.xDirection = 0;
+		projectile.yDirection = -1;
+	}else if(event.clientY > hero.y + 32){ //shoot down
+		projectile.xDirection = 0;
+		projectile.yDirection = 1;
+	}else if(event.clientX < hero.x) { //shoot left
+		projectile.xDirection = -1;
+		projectile.yDirection = 0;
+	}else if(event.clientX > hero.x + 32){ //shoot right
+		projectile.xDirection = 1;
+		projectile.yDirection = 0;
+	}
 	projectileAudio.volume = 0.2 //set the volume so it doesn't kill people's ears
 	projectileAudio.play();
 }
