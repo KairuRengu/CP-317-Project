@@ -1,6 +1,6 @@
 /*-------------------------------------------------------------------
 Names: Kyle Leng, Shawn Cramp
-Student Ids: 1206190790, 111007290
+Student Ids: 1206190790, 
 Description : Create a simple canvas game
 ---------------------------------------------------------------------*/
 
@@ -32,17 +32,25 @@ heroImage.onload = function () {
 heroImage.src = "images/hero.png";
 
 //-------------------------------- Monster image --------------------------------
-// Array for Storing Monsters
-var monsters = [];
-
+var monsterReady = false;
 var monsterImage = new Image();
+monsterImage.onload = function () {
+	monsterReady = true;
+	monster.x = canvas.width;
+	monster.y = canvas.height;
+	monster.xdir = 1;
+	monster.ydir = 1;
+};
 monsterImage.src = "images/monster.png";
 
 // ------------------------------- Projectile image ----------------------------
-// Array for Storing Projectiles
-var projectiles = [];
-
+var projectileReady = false;
+var projectileExists = false;
 var projectileImage = new Image();
+projectileImage.onload = function () {
+	projectile.x = hero.x;
+	projectile.y = hero.y;
+}
 var projectileAudio = new Audio('audio/pew-sound.wav'); //play from this audio file
 projectileImage.src = "images/bullet.png" // Temporary Projectile Image for Testing
 
@@ -50,114 +58,17 @@ projectileImage.src = "images/bullet.png" // Temporary Projectile Image for Test
 var hero = {
 	speed: 256 // movement in pixels per second
 };
-
-// Monster Object
-function Monster(I) {
-	I = I || {};
-	
-	// Set Active to True
-	I.active = true;
-	
-	// Set Coordinates for Monster
-	I.x = canvas.width;
-	I.y = canvas.height;
-	I.xDirection = 1;
-	I.yDirection = 1;
-	I.speed = 256;
-	
-	// Declare functions for how monsters behave
-	I.inBounds = function() {
-		if ( I.y < 0 ){ // if monster is at top part of image, switch direction on the y-axis
-			I.yDirection = 1;
-		} else if ( I.y > canvas.height - 32 ){ // if monster is at bottom part of image, switch direction on y-axis
-			I.yDirection = -1;
-		}
-		if ( I.x < 0 ){ // if monster is at the left side of the image, switch direction on the x-axis
-			I.xDirection = 1;
-		} else if ( I.x > canvas.width - 32){ // if monster is at the right side of the image, switch direction on the x-axis
-			I.xDirection = -1;
-		}
-	};
-	
-	// Draw Monsters
-	I.draw = function() {
-		ctx.drawImage(monsterImage, this.x, this.y);
-	};
-	
-	// Check if Monster is alive
-	I.alive = function() {
-		if (
-			hero.x >= (I.x + 32)
-			&& I.x >= (hero.x + 32)
-			&& hero.y >= (I.y + 32)
-			&& I.y >= (hero.y + 32)
-		) {updateScore()};
-	};
-	
-	// Update monster with new information and check if its still active
-	I.update = function(modifier) {
-		I.x += I.speed * (modifier * I.xDirection); // Move monster along x-axis at set speed * x-direction
-		I.y += I.speed * (modifier * I.yDirection); // Move monster along y-axis at set speed * y-direction
-
-		// The logic in this for killing a monster might have to be looked at
-		I.active = I.active && I.alive();
-	};
-	
-	return I;
-}
-
-// Projectile Object
-function Projectile(I, xDirection, yDirection) {
-	I.active = true;
-	
-	// Declare coordinates for projectile
-	I.speed = 512;
-	I.x = hero.x;
-	I.y = hero.y;
-	I.xDirection = xDirection;
-	I.yDirection = yDirection;
-	
-	// Declare functions for how the projectile behaves
-	I.inBounds = function() {
-		return I.x >= 0 && I.x <= canvas.width && I.y >= 0 && I.y <= canvas.height;
-	};
-
-	// Draw projectile at x and y
-	I.draw = function() {
-		ctx.drawImage(projectileImage, I.x, I.y);
-	};
-
-	// Goes through each monster in the Monster Array to see if a hit is registered
-	I.hit = function() {
-		monsters.forEach(function(Monster) {
-			if (
-				I.x <= (Monster.x + 16) && I.y <= Monster.y + 16 && I.x >= Monster.x && I.y >= Monster.y
-			) {updateScore()}
-			
-		});
-		
-	};
-
-	// Updates the projectiles with new locations
-	I.update = function(modifier) {
-		if( I.yDirection == -1){ //up
-			I.y -= I.speed * (modifier);
-		}
-		if(I.yDirection == 1){ //down
-			I.y += I.speed * (modifier);
-		}
-		if(I.xDirection == 1){ //right
-			I.x += I.speed * (modifier);
-		}
-		if(I.xDirection == -1 ){ //left
-			I.x -= I.speed * (modifier);
-		}
-		
-		I.active = I.active && I.inBounds();
-	};
-	
-	return I;
-}
+var monster = {
+	speed: 256 // monster
+};
+var projectile = {
+	projectileExists : false,
+	speed: 512, // projectile speed
+	x : 0,
+	y : 0,
+	xDirection : 0,
+	yDirection : 0
+};
 
 var clickDrag ={
 	isClickDrag : false,
@@ -172,6 +83,7 @@ if (localStorage.getItem("monstersCaught")){
 	var monstersCaught = Number(localStorage.getItem("monstersCaught"));
 }else{ //if they haven't played the game before start the monster count at 0
 	var monstersCaught = 0;
+	
 }
 
 //-------------------------------- Background Audio Initialization --------------------------------
@@ -181,7 +93,7 @@ backgroundAudio.addEventListener('ended', function() { //set an event listener s
     this.currentTime = 0; //the variable this refers to backgroundAudio and restarts at the 0 second mark
     this.play();
 }, false);
-//backgroundAudio.play(); //play the audio
+backgroundAudio.play(); //play the audio
 
 //-------------------------------- Handle keyboard controls --------------------------------
 var keysDown = {};
@@ -193,6 +105,17 @@ addEventListener("keydown", function (e) {
 addEventListener("keyup", function (e) {
 	delete keysDown[e.keyCode];
 }, false);
+
+//-------------------------------- Reset the game when the player catches a monster --------------------------------
+var monsterReset = function () { // This will have to change if we want multiple monsters since it only handles one monster
+	// Throw the monster somewhere on the screen randomly
+	monster.x = 32 + (Math.random() * (canvas.width - 64));
+	monster.y = 32 + (Math.random() * (canvas.height - 64));
+};
+
+var projectileReset = function () { // This needs to destroy the projectile on wall collision or monster collision
+	projectile.projectileExists = false;
+}
 
 //-------------------------------- On Mouse Movement --------------------------------
 //Current when the user presses the left click in renders a a monster
@@ -222,15 +145,6 @@ canvas.addEventListener("mouseup", function(event){
 	}
 },false);
 //-------------------------------- Update game objects --------------------------------
-var updateScore = function() {
-	++monstersCaught;
-	storeData(monstersCaught);
-	//Play Collision Audio
-	var collisionAudio = new Audio('audio/normal-hitclap.wav');
-	collisionAudio.volume= 0.2;
-	collisionAudio.play();
-};
-
 var update = function (modifier) {
 
 	if (38 in keysDown) { // Player holding up
@@ -246,39 +160,62 @@ var update = function (modifier) {
 		hero.x += hero.speed * modifier;
 	}
 	
-	// Update Projectiles
-	projectiles.forEach(function(projectile) {
-		projectile.update(modifier);
-	});
-	
-	// Update Monsters
-	monsters.forEach(function(monster) {
-		monster.update(modifier);
-	});
-	
-	// Spawn more monsters at random (This might be better with a timer)
-	if(Math.random() < 0.1) {
-		monsters.push(Monster(self));
+	//will shoot the bullet in a certain direction
+	if(projectile.projectileExists){
+		if( projectile.yDirection == -1){ //up
+			projectile.y -= projectile.speed * (modifier);
+		}
+		if(projectile.yDirection == 1){ //down
+			projectile.y += projectile.speed * (modifier);
+		}
+		if(projectile.xDirection == 1){ //right
+			projectile.x += projectile.speed * (modifier);
+		}
+		if(projectile.xDirection == -1 ){ //left
+			projectile.x -= projectile.speed * (modifier);
+		}
 	}
-	
+	monster.x += monster.speed * (modifier * monster.xdir); // Move monster along x-axis at set speed * x-direction
+	monster.y += monster.speed * (modifier * monster.ydir); // Move monster along y-axis at set speed * y-direction
 // -------------------------------- Hero and Goblin Detection --------------------------------	
 	// Are they touching?
-	monsters.forEach(function(monster) {
-		monster.alive();
-	});
+	if (
+		hero.x <= (monster.x + 32)
+		&& monster.x <= (hero.x + 32)
+		&& hero.y <= (monster.y + 32)
+		&& monster.y <= (hero.y + 32)
+	) {
+		++monstersCaught;
+		storeData(monstersCaught);
+		monsterReset();
+		//Play Collision Audio
+		var collisionAudio = new Audio('audio/normal-hitclap.wav');
+		collisionAudio.volume= 0.2;
+		collisionAudio.play();
+	}
 	// Did projectile collide with monster
-	projectiles.forEach(function(projectile) {
-		projectile.hit();
-	});
+	if (
+		projectile.x <= (monster.x + 32) && projectile.y <= monster.y + 32 && projectile.x >= monster.x && projectile.y >= monster.y
+	) {
+		console.log("hit me");
+		++monstersCaught;
+		storeData(monstersCaught);
+		monsterReset();
+		//Play Collision Audio
+		var collisionAudio = new Audio('audio/normal-hitclap.wav'); // Might be a way to reduce redundancy here with hero collision noise
+		collisionAudio.volume = 0.2; // Since this is the same code as in the if statement above
+		collisionAudio.play();
+	}
 	
 	heroWallCollision();
+	monsterWallCollision();
+	projectileWallCollision();
+	
 };
-
 // -------------------------------- Store Local Data --------------------------------
 var storeData = function(monstersCaught){
 	localStorage.monstersCaught = monstersCaught; //store the data locally	
-};
-
+}
 // -------------------------------- Hero and Monster Wall Collision Detection --------------------------------
 var heroWallCollision = function(){
 	if ( hero.y < 0 ){ //if the hero top part of the image hits the top of the screen stop it
@@ -291,46 +228,69 @@ var heroWallCollision = function(){
 	} else if ( hero.x > canvas.width - 32 ){ //if the hero's right side of the image touches the right side of the screen
 		hero.x = canvas.width - 32; //stop it at the right wall wall (the 32 is a constant factor might want to update this)
 	}
-};
+}
+
+ var monsterWallCollision = function(){ // Detects if monster is at a wall
+	 if ( monster.y < 0 ){ // if monster is at top part of image, switch direction on the y-axis
+		 monster.ydir = 1;
+	 } else if ( monster.y > canvas.height - 32 ){ // if monster is at bottom part of image, switch direction on y-axis
+		 monster.ydir = -1;
+	 }
+	 if ( monster.x < 0 ){ // if monster is at the left side of the image, switch direction on the x-axis
+		 monster.xdir = 1;
+	 } else if ( monster.x > canvas.width - 32){ // if monster is at the right side of the image, switch direction on the x-axis
+		 monster.xdir = -1;
+	 }
+ }
+ 
+ var projectileWallCollision = function(){
+	 if ( projectile.y < 0 ){
+		 projectileExists = false;
+	 } else if ( projectile.y > canvas.height - 32 ){
+		 projectileExists = false;
+	 }
+	 if ( projectile.x < 0 ){
+		 projectileExists = false;
+	 } else if ( projectile.x > canvas.width - 32){
+		 projectileExists = false;
+	 }
+ }
  //----------------------------------------Shoot Projectiles----------------------
 var shootProjectile = function(event){
 	//shoot the projectile
-	//projectile.projectileExists = true; //sets the projectile to exist
+	projectile.projectileExists = true; //sets the projectile to exist
 	//sets the projectile to the hero's location
-	var xDirection;  
-	var yDirection;
+	projectile.x = hero.x + 16;  
+	projectile.y = hero.y + 16;
 	//Figure out the direction to shoot the bullet
 	if(event.clientY < hero.y && event.clientX < hero.x){ //shoot top left
-		xDirection = -1;
-		yDirection = -1;
+		projectile.xDirection = -1;
+		projectile.yDirection = -1;
 	}else if(event.clientY > hero.y + 32 && event.clientX < hero.x){ //shoot bottom left
-		xDirection = -1;
-		yDirection = 1;
+		projectile.xDirection = -1;
+		projectile.yDirection = 1;
 	}else if(event.clientY < hero.y && event.clientX > hero.x + 32){ //shoot top right
-		xDirection = 1;
-		yDirection = -1;
+		projectile.xDirection = 1;
+		projectile.yDirection = -1;
 	}else if(event.clientY > hero.y + 32 && event.clientX > hero.x + 32){ //shoot bottom right
-		xDirection = 1;
-		yDirection = 1;
+		projectile.xDirection = 1;
+		projectile.yDirection = 1;
 	}else if(event.clientY < hero.y) { //shoot up
-		xDirection = 0;
-		yDirection = -1;
+		projectile.xDirection = 0;
+		projectile.yDirection = -1;
 	}else if(event.clientY > hero.y + 32){ //shoot down
-		xDirection = 0;
-		yDirection = 1;
+		projectile.xDirection = 0;
+		projectile.yDirection = 1;
 	}else if(event.clientX < hero.x) { //shoot left
-		xDirection = -1;
-		yDirection = 0;
+		projectile.xDirection = -1;
+		projectile.yDirection = 0;
 	}else if(event.clientX > hero.x + 32){ //shoot right
-		xDirection = 1;
-		yDirection = 0;
+		projectile.xDirection = 1;
+		projectile.yDirection = 0;
 	}
-	
-	projectiles.push(Projectile(self, xDirection, yDirection));
-	
-	projectileAudio.volume = 0.2; //set the volume so it doesn't kill people's ears
+	projectileAudio.volume = 0.2 //set the volume so it doesn't kill people's ears
 	projectileAudio.play();
-};
+}
 //-------------------------------- Draw everything --------------------------------
 var render = function () {
 	if (bgReady) {
@@ -340,15 +300,13 @@ var render = function () {
 	if (heroReady) {
 		ctx.drawImage(heroImage, hero.x, hero.y);
 	}
-	
-	monsters.forEach(function(monster) {
-		monster.draw();
-	});
-	
-	projectiles.forEach(function(projectile) {
-		projectile.draw();
-	});
-	
+
+	if (monsterReady) {
+		ctx.drawImage(monsterImage, monster.x, monster.y);
+	}
+	if (projectile.projectileExists){
+		ctx.drawImage(projectileImage, projectile.x, projectile.y);
+	}
 	// Score
 	ctx.fillStyle = "rgb(250, 250, 250)";
 	ctx.font = "24px Helvetica";
@@ -379,4 +337,5 @@ requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame
 
 // Let's play this game!
 var then = Date.now();
+monsterReset();
 main();
