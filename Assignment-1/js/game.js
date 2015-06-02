@@ -232,21 +232,25 @@ var update = function (modifier) {
 };
 // -------------------------------- Store Local Data --------------------------------
 var storeData = function(monstersCaught){
-	
 	if(hero.colour == "default"){
-		console.log("where do i store");
 		localStorage.monstersCaught = monstersCaught; //store the data locally
 	}else if(hero.colour == "red"){
-		console.log("where do i red");
 		localStorage.monstersCaughtRed = monstersCaught; //store the data locally for red
 	}else if(hero.colour == "green"){
-		console.log("where do i green");
 		localStorage.monstersCaughtGreen = monstersCaught; //store the data locally for green
 	}
 }
 var clearStorage = function(){ //clears the localStorage 
-	localStorage.monstersCaught = 0;
-	monstersCaught = localStorage.monstersCaught;
+	if(hero.colour == "default"){
+		localStorage.monstersCaught = 0; //store the data locally
+		monstersCaught = localStorage.monstersCaught;
+	}else if(hero.colour == "red"){
+		localStorage.monstersCaughtRed = 0; //store the data locally for red
+		monstersCaught = localStorage.monstersCaughtRed;
+	}else if(hero.colour == "green"){
+		localStorage.monstersCaughtGreen = 0; //store the data locally for green
+		monstersCaught = localStorage.monstersCaughtGreen;
+	}
 }
 var changeStorage = function(){
 	if(49 in keysDown){//change hero image to red
