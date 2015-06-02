@@ -221,6 +221,7 @@ var updateScore = function() {
 
 // Function to Spawn new Monsters
 var spawnMonster = function () {
+	console.log("how many");
 	monsters.push(new Monster());
 }
 
@@ -278,7 +279,7 @@ var update = function (modifier) {
 	projectiles.forEach(function(projectile) {
 		monsters.forEach(function(Monster) {
 			if (
-				projectile.x <= (Monster.x + 16) && projectile.y <= Monster.y + 16 && projectile.x >= Monster.x && projectile.y >= Monster.y
+				projectile.x <= (Monster.x + 16) && projectile.y <= Monster.y + 16 && projectile.x >= Monster.x && projectile.y >= Monster.y && Monster.active == true
 			) {
 				Monster.active = false;
 				projectile.active = false;
@@ -301,13 +302,7 @@ var update = function (modifier) {
 	});
 
 	// Spawn Monsters when Counter = 3, then reset back to 0 and count to 3 again
-	setInterval(function () {
-		++counter;
-	}, 1000);
-	if (counter == 3) {
-		counter = 0;
-		spawnMonster();
-	}
+
 };
 
 // -------------------------------- Store Local Data --------------------------------
@@ -452,7 +447,14 @@ var main = function () {
 	render();
 
 	then = now;
-
+	setInterval(function () {
+		++counter;
+	}, 1000);
+	console.log(counter);
+	if (counter >= 100) { //spawn roughly every 3 seconds
+		counter = 0;
+		spawnMonster();
+	}
 	// Request to do this again ASAP
 	requestAnimationFrame(main);
 };
