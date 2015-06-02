@@ -221,7 +221,6 @@ var updateScore = function() {
 
 // Function to Spawn new Monsters
 var spawnMonster = function () {
-	console.log("how many");
 	monsters.push(new Monster());
 }
 
@@ -450,7 +449,6 @@ var main = function () {
 	setInterval(function () {
 		++counter;
 	}, 1000);
-	console.log(counter);
 	if (counter >= 100) { //spawn roughly every 3 seconds
 		counter = 0;
 		spawnMonster();
