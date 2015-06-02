@@ -165,6 +165,15 @@ var update = function (modifier) {
 	}if(82 in keysDown){ //restart the game when the users presser r 
 		clearStorage();
 		restartGame();
+	}if(49 in keysDown){//change hero image to red
+		heroImage.src = "images/hero_red.png";
+		restartGame();
+	}if(50 in keysDown){ //change back to default
+		heroImage.src = "images/hero.png";
+		restartGame();
+	}if(51 in keysDown){//change hero image to green
+		heroImage.src = "images/hero_green.png";
+		restartGame();
 	}
 	
 	//will shoot the bullet in a certain direction
@@ -230,6 +239,7 @@ var restartGame = function(){ //restarts the game
 	hero.x = canvas.width / 2;
 	hero.y = canvas.height / 2;
 	backgroundAudio.currentTime = 0;
+	clearStorage();
 }
 // -------------------------------- Hero and Monster Wall Collision Detection --------------------------------
 var heroWallCollision = function(){
