@@ -146,7 +146,7 @@ canvas.addEventListener("mouseup", function(event){
 },false);
 //-------------------------------- Update game objects --------------------------------
 var update = function (modifier) {
-
+	console.log(keysDown);
 	if (38 in keysDown) { // Player holding up
 		hero.y -= hero.speed * modifier;
 	}
@@ -158,6 +158,13 @@ var update = function (modifier) {
 	}
 	if (39 in keysDown) { // Player holding right
 		hero.x += hero.speed * modifier;
+	}
+//------------------------------ Added features  ----------------------------------	
+	if(67 in keysDown){
+		clearStorage();
+	}if(82 in keysDown){ //restart the game when the users presser r 
+		clearStorage();
+		restartGame();
 	}
 	
 	//will shoot the bullet in a certain direction
@@ -197,7 +204,6 @@ var update = function (modifier) {
 	if (
 		projectile.x <= (monster.x + 32) && projectile.y <= monster.y + 32 && projectile.x >= monster.x && projectile.y >= monster.y
 	) {
-		console.log("hit me");
 		++monstersCaught;
 		storeData(monstersCaught);
 		monsterReset();
@@ -215,6 +221,15 @@ var update = function (modifier) {
 // -------------------------------- Store Local Data --------------------------------
 var storeData = function(monstersCaught){
 	localStorage.monstersCaught = monstersCaught; //store the data locally	
+}
+var clearStorage = function(){ //clears the localStorage 
+	localStorage.monstersCaught = 0;
+	monstersCaught = localStorage.monstersCaught;
+}
+var restartGame = function(){ //restarts the game
+	hero.x = canvas.width / 2;
+	hero.y = canvas.height / 2;
+	backgroundAudio.currentTime = 0;
 }
 // -------------------------------- Hero and Monster Wall Collision Detection --------------------------------
 var heroWallCollision = function(){
