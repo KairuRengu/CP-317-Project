@@ -56,7 +56,8 @@ projectileImage.src = "images/bullet.png" // Temporary Projectile Image for Test
 
 //-------------------------------- Game objects --------------------------------
 var hero = {
-	speed: 256 // movement in pixels per second
+	speed: 256, // movement in pixels per second
+	colour : "default"
 };
 var monster = {
 	speed: 256 // monster
@@ -146,7 +147,6 @@ canvas.addEventListener("mouseup", function(event){
 },false);
 //-------------------------------- Update game objects --------------------------------
 var update = function (modifier) {
-	console.log(keysDown);
 	if (38 in keysDown) { // Player holding up
 		hero.y -= hero.speed * modifier;
 	}
@@ -167,13 +167,16 @@ var update = function (modifier) {
 		restartGame();
 	}if(49 in keysDown){//change hero image to red
 		heroImage.src = "images/hero_red.png";
-		restartGame();
+		hero.colour = "red";
+		changeStorage();
 	}if(50 in keysDown){ //change back to default
 		heroImage.src = "images/hero.png";
-		restartGame();
+		hero.colour = "default";
+		changeStorage();
 	}if(51 in keysDown){//change hero image to green
 		heroImage.src = "images/hero_green.png";
-		restartGame();
+		hero.colour = "green";
+		changeStorage();
 	}
 	
 	//will shoot the bullet in a certain direction
@@ -229,11 +232,45 @@ var update = function (modifier) {
 };
 // -------------------------------- Store Local Data --------------------------------
 var storeData = function(monstersCaught){
-	localStorage.monstersCaught = monstersCaught; //store the data locally	
+	
+	if(hero.colour == "default"){
+		console.log("where do i store");
+		localStorage.monstersCaught = monstersCaught; //store the data locally
+	}else if(hero.colour == "red"){
+		console.log("where do i red");
+		localStorage.monstersCaughtRed = monstersCaught; //store the data locally for red
+	}else if(hero.colour == "green"){
+		console.log("where do i green");
+		localStorage.monstersCaughtGreen = monstersCaught; //store the data locally for green
+	}
 }
 var clearStorage = function(){ //clears the localStorage 
 	localStorage.monstersCaught = 0;
 	monstersCaught = localStorage.monstersCaught;
+}
+var changeStorage = function(){
+	if(49 in keysDown){//change hero image to red
+		if(localStorage.getItem("monstersCaughtRed")){
+			monstersCaught = localStorage.monstersCaughtRed;
+		}else{
+			monstersCaught = 0;
+			localStorage.monstersCaughtRed = 0;
+		}
+	}if(50 in keysDown){ //change back to default
+		if(localStorage.getItem("monstersCaught")){
+			monstersCaught = localStorage.monstersCaught;
+		}else{
+			monstersCaught = 0;
+			localStorage.monstersCaught = 0;
+		}
+	}if(51 in keysDown){//change hero image to green
+		if(localStorage.getItem("monstersCaughtGreen")){
+			monstersCaught = localStorage.monstersCaughtGreen;
+		}else{
+			monstersCaught = 0;
+			localStorage.monstersCaughtGreen = 0;
+		}
+	}
 }
 var restartGame = function(){ //restarts the game
 	hero.x = canvas.width / 2;
