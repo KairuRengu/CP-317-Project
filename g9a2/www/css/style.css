@@ -27,6 +27,18 @@
 .center{
 	text-align:center;
 }
+.ui-btn {
+    text-align: left;
+}
+
+.ui-thumbnail {
+    width: 50px;
+    height: 50px;
+}
+
+.ui-title {
+    text-align: center;
+}
 /*Header and body css selectors are to remove the white space around navbar*/
 header{
     margin:0;
