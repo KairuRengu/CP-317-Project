@@ -12,8 +12,11 @@
 	text-align:center;
 }
 .Thumbnail{
-	height:5em;
-	width:5em;
+	height:3em;
+	width:3em;
+	padding-left:1em;
+	padding-top:1em;
+	float:left;
 	display:inline;
 }
 /*Header and body css selectors are to remove the white space around navbar*/
@@ -22,4 +25,14 @@ header{
 }
 body{
     margin:0;
+}
+.MemberInformation{
+	padding-bottom:5em;
+	border-width: 0.3em;
+	border-bottom: 0.3em blue solid;
+}
+
+.MemberInformation p{
+	padding-top:2em;
+	position:center;
 }
