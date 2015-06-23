@@ -11,19 +11,7 @@
 #link_container{
 	text-align:center;
 }
-.center{
-	text-align:center;	
-}
-.navbar{
-	background:#3388cc;
-	text-align:center;
-	margin:auto;
-	height:3em;
-}
-.navbar p{
-	margin:0;
-	line-height:3em;
-}
+
 /*Header and body css selectors are to remove the white space around navbar*/
 header{
     margin:0;
