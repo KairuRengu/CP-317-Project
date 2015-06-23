@@ -19,6 +19,9 @@
 	float:left;
 	display:inline;
 }
+.center{
+	text-align:center;
+}
 /*Header and body css selectors are to remove the white space around navbar*/
 header{
     margin:0;
