@@ -11,7 +11,11 @@
 #link_container{
 	text-align:center;
 }
-
+.Thumbnail{
+	height:5em;
+	width:5em;
+	display:inline;
+}
 /*Header and body css selectors are to remove the white space around navbar*/
 header{
     margin:0;
