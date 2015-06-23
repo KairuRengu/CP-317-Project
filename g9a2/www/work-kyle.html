@@ -1,4 +1,5 @@
 <html>
+	<div data-role="page">
 	<header>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,9 +12,9 @@
 		<link rel="stylesheet" href="js\jquery-ui-1.11.4.custom\jquery-ui.min.css"
 		<!-- End Loading Files -->
 		<div class="navbar fullwidth" data-role="header">
-			<button id="backButton"><a href="group_information.html" data-ajax="false">Back</a></button>
+			<button id="backButton" data-icon="back"><a href="group_information.html" data-transition="reverse">Back</a></button>
 			<center><h3>Kyle Leng</h3></center>
-			<button id="homeButton"><a href="index.html">Home</a></button>
+			<button id="homeButton" data-icon="home"><a href="index.html" >Home</a></button>
 		</div>
 	</header>
 	<body>
@@ -22,11 +23,12 @@
 			I've been working as a web developer for several co-op terms
 		</p>
 	</body>
-	<div id="footer" class="ui-buttonset" data-role="navbar">
+	<div id="footer" class="ui-buttonset" data-role="navbar" data-position="fixed">
 		<ul>
-			<button data-icon="gear" data-iconpos="top"><a href="kyle.html" data-ajax="false">About</a></button>
-			<button data-icon="star" class="ui-btn-active" data-iconpos="top"><a href="work-kyle.html" class="ui-btn-active"data-ajax="false">Work</a></button>
-			<button data-icon="info" data-iconpos="top"><a href="profile-kyle.html" data-ajax="false">Profile</a></button>
+			<button data-icon="gear" data-iconpos="top"><a href="kyle.html" data-transition="slide">About</a></button>
+			<button data-icon="star" class="ui-btn-active" data-iconpos="top"><a href="work-kyle.html" class="ui-btn-active" data-transition="slide">Work</a></button>
+			<button data-icon="info" data-iconpos="top"><a href="profile-kyle.html"  data-transition="slide">Profile</a></button>
 		</ul>
+	</div>
 	</div>
 </html>

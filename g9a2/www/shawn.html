@@ -1,4 +1,5 @@
 <html>
+<div data-role="page">
 	<header>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,28 +12,19 @@
 		<link rel="stylesheet" href="js\jquery-ui-1.11.4.custom\jquery-ui.min.css"
 		<!-- End Loading Files -->
 		<div class="navbar fullwidth" data-role="header">
-			<button id="backButton"><a href="group_information.html" data-ajax="false">Back</a></button>
+			<button id="backButton" data-icon="back"><a href="group_information.html" data-transition="reverse">Back</a></button>
 			<center><h3>Shawn Cramp</h3></center>
-			<button id="homeButton"><a href="index.html">Home</a></button>
+			<button id="homeButton" data-icon="home"><a href="index.html" >Home</a></button>
 		</div>
 	</header>
 	<img class="funny" src="img/programmerhumor4.png"></img>
-	<p>My name is Shawn Cramp, and I'm a third year Computer Science student at Laurier.<br><br>
-	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vestibulum, est quis egestas dictum, quam sapien porta ante, sit amet congue dui sapien quis dolor. Praesent sed felis tincidunt, hendrerit turpis sit amet, tristique tellus. Integer finibus lacinia nisl in convallis. Nam vel est ut est posuere elementum. Quisque aliquet luctus velit sit amet scelerisque. Aenean interdum nec eros imperdiet sollicitudin. Morbi tincidunt nisl sed molestie volutpat. Nam venenatis quam quis pharetra pharetra.
-
-Donec nisi neque, ullamcorper in eros accumsan, ultricies congue velit. Ut non tempor dolor. Sed lobortis mauris non erat blandit imperdiet. Nulla fermentum scelerisque purus, at faucibus ex tempus a. Proin non est ligula. In egestas finibus iaculis. Cras eu eros malesuada, condimentum ante ac, maximus erat. Praesent interdum, eros ut feugiat elementum, odio eros vehicula est, ac auctor magna arcu faucibus sapien. Vestibulum sed feugiat ex. Nullam faucibus risus enim, ac faucibus tellus vulputate at. Quisque sagittis sapien dui, sit amet venenatis risus efficitur sit amet. Nunc rhoncus leo id rhoncus bibendum. Donec consequat orci eget viverra semper. Sed sollicitudin lobortis lacus non fermentum. Proin feugiat, metus ac consequat sagittis, risus ante ultrices nisl, eget euismod nisi massa ut orci.
-
-Nam viverra urna eu arcu vehicula bibendum. Integer venenatis in risus semper egestas. Donec ex risus, gravida quis augue nec, dapibus tempus velit. Nullam consectetur at dui sed pharetra. Curabitur bibendum tincidunt pulvinar. Fusce scelerisque pretium ex, non imperdiet mauris ullamcorper eget. Etiam sed volutpat quam, non aliquet turpis. Integer viverra, metus eu semper ultricies, arcu urna maximus ligula, faucibus congue magna purus non mauris. Etiam sed aliquam ante. Vestibulum fringilla, augue eget auctor sollicitudin, neque risus scelerisque orci, eu venenatis risus neque eget purus.
-
-Praesent id facilisis lectus, blandit auctor nunc. Duis at efficitur tellus. Curabitur eget enim porta, vehicula arcu id, finibus arcu. Nulla rhoncus odio felis, quis vestibulum sem molestie vitae. Cras interdum fermentum justo. Suspendisse eget malesuada diam. Quisque porttitor elit ac blandit maximus. Phasellus ac justo ac felis scelerisque dictum id id nisi. Praesent a cursus odio. Vestibulum aliquet magna quis odio viverra, nec blandit metus mattis. Maecenas maximus eros in velit ultrices, et pharetra velit sodales. Pellentesque ac mi eu lorem vulputate maximus sed vitae arcu.
-
-Phasellus sed odio tristique, sodales dolor at, volutpat nunc. Nullam vel commodo orci. Aliquam bibendum at leo in hendrerit. Nam molestie dui nibh. Donec luctus justo ut quam hendrerit ultrices. Nam id tellus felis. Nunc viverra nec quam ac luctus.
-	</p>
-	<div id="footer" class="ui-buttonset" data-role="navbar">
+	<p>My name is Shawn Cramp, and I'm a third year Computer Science student at Laurier.</p>
+	<div id="footer" class="ui-buttonset" data-role="navbar" data-position="fixed">
 		<ul>
-			<button class="ui-btn-active" data-icon="gear" data-iconpos="top"><a href="shawn.html" class="ui-btn-active" data-ajax="false">About</a></button>
-			<button data-icon="star" data-iconpos="top"><a href="work-shawn.html" data-ajax="false">Work</a></button>
-			<button data-icon="info" data-iconpos="top"><a href="profile-shawn.html" data-ajax="false">Profile</a></button>
+			<button class="ui-btn-active" data-icon="gear" data-iconpos="top"><a href="shawn.html" class="ui-btn-active" data-transition="slide" >About</a></button>
+			<button data-icon="star" data-iconpos="top"><a href="work-shawn.html" data-transition="slide">Work</a></button>
+			<button data-icon="info" data-iconpos="top"><a href="profile-shawn.html"  data-transition="slide">Profile</a></button>
 		</ul>
+	</div>
 	</div>
 </html>

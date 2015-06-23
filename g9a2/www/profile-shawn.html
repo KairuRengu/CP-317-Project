@@ -1,4 +1,5 @@
 <html>
+	<div data-role="page">
 	<header>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,20 +12,21 @@
 		<link rel="stylesheet" href="js\jquery-ui-1.11.4.custom\jquery-ui.min.css"
 		<!-- End Loading Files -->
 		<div class="navbar fullwidth" data-role="header">
-			<button id="backButton"><a href="group_information.html" data-ajax="false">Back</a></button>
+			<button id="backButton" data-icon="back"><a href="group_information.html" data-transition="reverse">Back</a></button>
 			<center><h3>Shawn Cramp</h3></center>
-			<button id="homeButton"><a href="index.html">Home</a></button>
+			<button id="homeButton" data-icon="home"><a href="index.html" >Home</a></button>
 		</div>
 	</header>
 	<body>
 	<img class="funny" src="img/programmerhumor5.jpg"></img>
 		<p>Shawn Cramp is a member of the group, and he is responsible for more of the back end facing features.Insert generic profile information here.</p>
 	</body>
-	<div id="footer" class="ui-buttonset" data-role="navbar">
+	<div id="footer" class="ui-buttonset" data-role="navbar" data-position="fixed">
 		<ul>
-			<button data-icon="gear" data-iconpos="top"><a href="shawn.html" data-ajax="false">About</a></button>
-			<button data-icon="star" data-iconpos="top"><a href="work-shawn.html" data-ajax="false">Work</a></button>
-			<button class="ui-btn-active" data-icon="info" data-iconpos="top"><a href="profile-shawn.html" class="ui-btn-active" data-ajax="false">Profile</a></button>
+			<button data-icon="gear" data-iconpos="top"><a href="shawn.html" data-transition="slide" >About</a></button>
+			<button data-icon="star" data-iconpos="top"><a href="work-shawn.html" data-transition="slide" >Work</a></button>
+			<button class="ui-btn-active" data-icon="info" data-iconpos="top"><a href="profile-shawn.html" data-transition="slide" class="ui-btn-active" >Profile</a></button>
 		</ul>
+	</div>
 	</div>
 </html>
